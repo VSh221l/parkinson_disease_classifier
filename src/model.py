@@ -3,10 +3,12 @@ from sklearn.base import BaseEstimator
 
 
 def build_model(
+    objective: str = "binary:logistic",
     learning_rate: float = 0.1,
     n_estimators: int = 200,
     max_depth: int = 5,
-    random_state: int = 42
+    random_state: int = 42,
+    eval_metric: str = "logloss"
 ) -> BaseEstimator:
     """
     Создает и возвращает модель XGBoost.
@@ -21,11 +23,11 @@ def build_model(
         BaseEstimator: инициализированная модель.
     """
     return XGBClassifier(
-        objective="binary:logistic",
+        objective=objective,
         learning_rate=learning_rate,
         n_estimators=n_estimators,
         max_depth=max_depth,
         random_state=random_state,
-        use_label_encoder=False,
-        eval_metric="logloss"
+        eval_metric=eval_metric,
+        use_label_encoder=False
     )
