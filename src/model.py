@@ -28,6 +28,5 @@ def build_model(
         n_estimators=n_estimators,
         max_depth=max_depth,
         random_state=random_state,
-        eval_metric=eval_metric,
-        use_label_encoder=False
+        eval_metric=eval_metric
     )
