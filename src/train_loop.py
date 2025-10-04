@@ -1,9 +1,11 @@
 import logging
 import matplotlib.pyplot as plt
+import numpy as np
 from pathlib import Path
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
+from sklearn.model_selection import cross_val_score
 import seaborn as sns
-from typing import Any, Optional, Tuple
+from typing import Any, Optional
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -18,7 +20,7 @@ def train_and_evaluate(
         X_test, 
         y_train,
         y_test
-) -> Tuple[object, float]:
+) -> object:
     """
     Обучает модель и выводит метрики.
 
@@ -26,14 +28,25 @@ def train_and_evaluate(
         model (Any): модель для обучения.
         X_train, X_test, y_train, y_test: выборки данных.
     """
+
+    # Если модель — это GridSearchCV, берём лучшую подмодель
+    if hasattr(model, "best_estimator_"):
+        model = model.best_estimator_
+
     logger.info("Training started...")
-    model.fit(X_train, y_train)
+
+    eval_set = [(X_train, y_train), (X_test, y_test)]
+
+    model.fit(X_train, y_train, eval_set=eval_set, verbose=False)
+
     logger.info("Training finished.")
 
     y_pred = model.predict(X_test)
-
     acc = accuracy_score(y_test, y_pred)
     logger.info(f"Test Accuracy: {acc:.4f}")
+
+    scores = cross_val_score(model, X_train, y_train, cv=5, scoring='accuracy')
+    print("CV accuracy:", np.mean(scores))
 
     print("Classification Report:")
     print(classification_report(y_test, y_pred))
@@ -41,7 +54,7 @@ def train_and_evaluate(
     cm = confusion_matrix(y_test, y_pred)
     plot_confusion_matrix(cm)
 
-    return model, acc
+    return model
 
 
 def plot_confusion_matrix(

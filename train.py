@@ -15,10 +15,16 @@ def main():
     X_train, X_test, y_train, y_test = preprocess_data(df, normalize=True)
 
     # 3. Строим модель
-    model = build_model()
+    model = build_model(tune=True)
+
+    # 3.1 Подбор гиперпараметров
+    model.fit(X_train, y_train)
+
+    # 3.2 Выбираем лучшую модель
+    best_model = model.best_estimator_
 
     # 4. Обучение и оценка
-    trained_model = train_and_evaluate(model, X_train, X_test, y_train, y_test)
+    trained_model = train_and_evaluate(best_model, X_train, X_test, y_train, y_test)
 
     # 5. Сохраняем модель
     save_model(trained_model)

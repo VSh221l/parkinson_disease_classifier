@@ -39,7 +39,7 @@ def load_data(
 
 def preprocess_data(
     df: pd.DataFrame, normalize: bool = True, test_size: float = 0.2, random_state: int = 42
-) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
+) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series, float]:
     """
     Делит данные на train/test и выполняет нормализацию (опционально).
 
