@@ -3,6 +3,8 @@ from src.model import build_model
 from src.train_loop import train_and_evaluate
 from src.utils import save_model
 
+from sklearn.feature_selection import SelectFromModel
+
 
 def main():
     print("=== Обнаружение болезни Паркинсона ===")
@@ -22,6 +24,11 @@ def main():
 
     # 3.2 Выбираем лучшую модель
     best_model = model.best_estimator_
+
+    # 3.3 Отбор признаков    
+    selector = SelectFromModel(best_model, threshold=0.03, prefit=True)
+    X_train = selector.transform(X_train)
+    X_test = selector.transform(X_test)
 
     # 4. Обучение и оценка
     trained_model = train_and_evaluate(best_model, X_train, X_test, y_train, y_test)

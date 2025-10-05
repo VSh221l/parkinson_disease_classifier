@@ -53,12 +53,22 @@ def build_model(
         return base_model
 
     # --- Параметры для тюнинга ---
+    # param_grid = {
+    #     "max_depth": [3, 4, 5],
+    #     "learning_rate": [0.05, 0.1, 0.2],
+    #     "n_estimators": [200, 300, 400],
+    #     "subsample": [0.6, 0.8, 1.0],
+    #     "colsample_bytree": [0.5, 0.8, 1.0],
+    # }
     param_grid = {
-        "max_depth": [3, 4, 5],
-        "learning_rate": [0.05, 0.1, 0.2],
-        "n_estimators": [200, 300, 400],
-        "subsample": [0.6, 0.8, 1.0],
-        "colsample_bytree": [0.5, 0.8, 1.0],
+    "n_estimators": [100, 200, 300, 500],
+    "max_depth": [3, 4, 5, 6],
+    "learning_rate": [0.01, 0.05, 0.1, 0.2],
+    "subsample": [0.7, 0.8, 0.9, 1.0],
+    "colsample_bytree": [0.7, 0.8, 0.9, 1.0],
+    "gamma": [0, 0.1, 0.2, 0.3],
+    "reg_lambda": [0.5, 1, 1.5, 2],
+    "min_child_weight": [1, 3, 5],
     }
 
     logger.info("Starting GridSearchCV for XGBoost hyperparameter tuning...")
@@ -67,7 +77,7 @@ def build_model(
         estimator=base_model,
         param_distributions=param_grid,
         random_state=random_state,
-        n_iter=30,
+        n_iter=50,
         scoring="accuracy",
         cv=5,
         n_jobs=-1,
