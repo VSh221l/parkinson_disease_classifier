@@ -14,7 +14,7 @@ def main():
 
     # 2. Предобработка
 
-    X_train, X_test, y_train, y_test = preprocess_data(df, normalize=True)
+    X_train, X_test, y_train, y_test = preprocess_data(df, normalize=False)
 
     # 3. Строим модель
     model = build_model(tune=True)
